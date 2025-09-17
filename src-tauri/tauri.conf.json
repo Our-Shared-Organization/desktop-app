@@ -51,7 +51,7 @@
       "tsp": false,
       "webviewInstallMode": {
         "silent": true,
-        "type": "downloadBootstrapper"
+        "type": "offlineInstaller"
       },
       "wix": {
         "language": ["ru-RU", "en-US"]
@@ -71,6 +71,26 @@
         "files": {},
         "release": "1"
       }
+    },
+
+    "macOS": {
+      "dmg": {
+        "appPosition": {
+          "x": 180,
+          "y": 170
+        },
+        "applicationFolderPosition": {
+          "x": 480,
+          "y": 170
+        },
+        "windowSize": {
+          "height": 400,
+          "width": 660
+        }
+      },
+      "files": {},
+      "hardenedRuntime": true,
+      "minimumSystemVersion": "10.13"
     }
   }
 }
