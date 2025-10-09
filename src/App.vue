@@ -4,10 +4,46 @@ import { invoke } from "@tauri-apps/api/core";
 
 const greetMsg = ref("");
 const name = ref("");
+const phone = ref("");
+const password = ref("");
+const authResult = ref("");
+const isLoading = ref(false);
 
 async function greet() {
   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
   greetMsg.value = await invoke("greet", { name: name.value });
+}
+
+async function authenticate() {
+  if (!phone.value || !password.value) {
+    authResult.value = "Please enter both phone and password";
+    return;
+  }
+  
+  isLoading.value = true;
+  authResult.value = "";
+  
+  try {
+    const result = await invoke("authenticate", { 
+      phone: phone.value, 
+      password: password.value 
+    });
+    
+    if (result.userId !== null && result.userId !== undefined) {
+      authResult.value = `Успешный вход! UserID: ${result.userId}, RoleID: ${result.userRoleId}`;
+
+      localStorage.setItem('userId', String(result.userId));
+      localStorage.setItem('userRoleId', String(result.userRoleId));
+
+      localStorage.setItem('userData', JSON.stringify(result));
+    } else if (result.message) {
+      authResult.value = `Ошибка входа: ${result.message}`;
+    }
+  } catch (error) {
+    authResult.value = `Ошибка: ${error}`;
+  } finally {
+    isLoading.value = false;
+  }
 }
 </script>
 
@@ -32,7 +68,32 @@ async function greet() {
       <input id="greet-input" v-model="name" placeholder="Enter a name..." />
       <button type="submit">Greet</button>
     </form>
+
     <p>{{ greetMsg }}</p>
+
+    <div class="auth-section">
+      <h2>Authentication</h2>
+      <form class="auth-form" @submit.prevent="authenticate">
+        <input 
+          v-model="phone" 
+          type="tel" 
+          placeholder="Phone" 
+          required 
+        />
+        <input 
+          v-model="password" 
+          type="password" 
+          placeholder="Password" 
+          required 
+        />
+        <button type="submit" :disabled="isLoading">
+          {{ isLoading ? 'Загрузка...' : 'Вход' }}
+        </button>
+      </form>
+      <p v-if="authResult" :class="{ 'success': authResult.includes('successful'), 'error': !authResult.includes('successful') }">
+        {{ authResult }}
+      </p>
+    </div>
   </main>
 </template>
 
@@ -43,6 +104,39 @@ async function greet() {
 
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #249b73);
+}
+
+.auth-section {
+  margin-top: 2.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.auth-form button {
+  background: #646cff;
+}
+
+.success {
+  color: #249b73;
+  font-weight: 500;
+}
+
+.error {
+  color: #e74c3c;
+  font-weight: 500;
 }
 
 </style>
