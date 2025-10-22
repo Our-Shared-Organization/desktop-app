@@ -48,7 +48,7 @@ async function authenticate() {
 </script>
 
 <template>
-  <main class="container">
+  <!-- <main class="container">
     <h1>Welcome to Tauri + Vue</h1>
 
     <div class="row">
@@ -94,7 +94,8 @@ async function authenticate() {
         {{ authResult }}
       </p>
     </div>
-  </main>
+  </main> -->
+  <RouterView />
 </template>
 
 <style scoped>
