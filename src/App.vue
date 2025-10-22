@@ -65,7 +65,7 @@ async function authenticate() {
     <p>Click on the Tauri, Vite, and Vue logos to learn more.</p>
 
     <form class="row" @submit.prevent="greet">
-      <input id="greet-input" v-model="name" placeholder="Enter a name..." />
+      <input id="greet-input" v-model="name" placeholder="Введите имя..." />
       <button type="submit">Greet</button>
     </form>
 
@@ -75,15 +75,15 @@ async function authenticate() {
       <h2>Authentication</h2>
       <form class="auth-form" @submit.prevent="authenticate">
         <input 
-          v-model="phone" 
+          v-model="login" 
           type="tel" 
-          placeholder="Phone" 
+          placeholder="Пароль" 
           required 
         />
         <input 
           v-model="password" 
           type="password" 
-          placeholder="Password" 
+          placeholder="Пароль" 
           required 
         />
         <button type="submit" :disabled="isLoading">

@@ -2,14 +2,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 struct AuthRequest {
-    phone: String,
+    login: String,
     password: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AuthResponse {
-    #[serde(rename = "userId")]
-    pub user_id: Option<serde_json::Value>,
+    #[serde(rename = "userLogin")]
+    pub user_login: Option<serde_json::Value>,
     #[serde(rename = "userName")]
     pub user_name: Option<serde_json::Value>,
     #[serde(rename = "userSurname")]
@@ -34,10 +34,10 @@ pub struct AuthErrorResponse {
 
 
 #[tauri::command]
-pub async fn authenticate(phone: String, password: String) -> Result<AuthResponse, String> {
+pub async fn authenticate(login: String, password: String) -> Result<AuthResponse, String> {
     let client = reqwest::Client::new();
     let auth_data = AuthRequest { 
-        phone: phone.clone(), 
+        login: login.clone(), 
         password: password.clone() 
     };
     
