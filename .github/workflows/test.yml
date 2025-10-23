@@ -1,0 +1,23 @@
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    name: Checkout
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+  reviewdog:
+    name: Reviewdog
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mongolyy/reviewdog-action-biome@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review

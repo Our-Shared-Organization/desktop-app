@@ -1,23 +1,54 @@
+name: 'publish'
+
 on:
   push:
-  pull_request:
-jobs:
-  build:
-    name: Checkout
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    branches:
+      - release
 
-  reviewdog:
-    name: Reviewdog
-    runs-on: ubuntu-latest
+
+jobs:
+  publish-tauri:
     permissions:
-      contents: read
-      pull-requests: write
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'ubuntu-22.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
+
+    runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
-      - uses: mongolyy/reviewdog-action-biome@v1
+
+      - name: setup node
+        uses: actions/setup-node@v4
         with:
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
+          node-version: lts/*
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: install frontend dependencies
+        run: bun install
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: app-v__VERSION__
+          releaseName: 'App v__VERSION__'
+          releaseBody: 'See the assets to download this version and install.'
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
