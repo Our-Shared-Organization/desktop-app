@@ -2,7 +2,15 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-content">
-                <a class="logo">Ω</a>
+                <div class="nav-links-left">
+                    <RouterLink to="/" class="nav-link">Главная</RouterLink>
+                    <RouterLink to="/masters" class="nav-link">Мастера</RouterLink>
+                </div>
+                <RouterLink to="/" class="logo">Ω</RouterLink>
+                <div class="nav-links-right">
+                    <RouterLink to="/services" class="nav-link">Услуги</RouterLink>
+                    <RouterLink to="/contacts" class="nav-link">Контакты</RouterLink>
+                </div>
             </div>
         </div>
     </nav>
@@ -23,9 +31,15 @@
 .nav-content {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     padding: 1rem 0;
     gap: 3rem;
+}
+
+.nav-links-left,
+.nav-links-right {
+    display: flex;
+    gap: 2rem;
 }
 
 .nav-link {
@@ -42,7 +56,7 @@
 }
 
 .logo {
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: #fafafa;
     transition: color 0.3s;
 }
