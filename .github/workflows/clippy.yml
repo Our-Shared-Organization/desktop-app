@@ -48,8 +48,7 @@ jobs:
           bun-version: latest
 
       - name: Bun install and check
-        run: |
-          bun i
+        run: bun i
 
       - name: Build Web Assets
         run: bun run web:build
