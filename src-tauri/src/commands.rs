@@ -1,35 +1,6 @@
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize)]
-struct AuthRequest {
-    login: String,
-    password: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct AuthResponse {
-    #[serde(rename = "userLogin")]
-    pub user_login: Option<serde_json::Value>,
-    #[serde(rename = "userName")]
-    pub user_name: Option<serde_json::Value>,
-    #[serde(rename = "userSurname")]
-    pub user_surname: Option<serde_json::Value>,
-    #[serde(rename = "userPhone")]
-    pub user_phone: Option<serde_json::Value>,
-    #[serde(rename = "userSex")]
-    pub user_sex: Option<serde_json::Value>,
-    #[serde(rename = "userRoleId")]
-    pub user_role_id: Option<serde_json::Value>,
-    #[serde(rename = "userPassword")]
-    pub user_password: Option<serde_json::Value>,
-    #[serde(rename = "userStatus")]
-    pub user_status: Option<serde_json::Value>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct AuthErrorResponse {
-    pub message: String,
-}
+use crate::classes::auth_request::AuthRequest;
+use crate::classes::auth_response::AuthResponse;
+use crate::classes::request_error::RequestError;
 
 
 
@@ -42,7 +13,7 @@ pub async fn authenticate(login: String, password: String) -> Result<AuthRespons
     };
     
     let response = client
-        .post("http://localhost:5053/user/auth")
+        .post("https://localhost:32775/user/auth")
         .header("Content-Type", "application/json")
         .json(&auth_data)
         .send()
@@ -61,7 +32,7 @@ pub async fn authenticate(login: String, password: String) -> Result<AuthRespons
         Ok(auth_result)
     } else {
         if status == 400 || status == 404 {
-            if let Ok(error_response) = serde_json::from_str::<AuthErrorResponse>(&response_text) {
+            if let Ok(error_response) = serde_json::from_str::<RequestError>(&response_text) {
                 return Err(error_response.message);
             }
         }
