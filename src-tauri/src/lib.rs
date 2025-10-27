@@ -1,5 +1,6 @@
 use tauri::Manager;
 
+mod classes;
 mod commands;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/

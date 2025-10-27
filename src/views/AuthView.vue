@@ -1,24 +1,62 @@
-<script setup lang="ts">
+<script setup>
+import { ref } from 'vue';
+import { invoke } from '@tauri-apps/api/core';
 import NavBar from '../components/NavBar.vue';
 
+const login = ref("");
+const password = ref("");
+const authResult = ref("");
+const isLoading = ref(false);
+
+async function authenticate() {
+    if (!login.value || !password.value) {
+    authResult.value = "Please enter both login and password";
+    return;
+  }
+  
+  isLoading.value = true;
+  authResult.value = "";
+  
+  try {
+    const result = await invoke("authenticate", { 
+      login: login.value, 
+      password: password.value 
+    });
+    
+    if (result.userId !== null && result.userId !== undefined) {
+      authResult.value = `Успешный вход! UserID: ${result.userId}, RoleID: ${result.userRoleId}`;
+
+      localStorage.setItem('userId', String(result.userId));
+      localStorage.setItem('userRoleId', String(result.userRoleId));
+
+      localStorage.setItem('userData', JSON.stringify(result));
+    } else if (result.message) {
+      authResult.value = `Ошибка входа: ${result.message}`;
+    }
+  } catch (error) {
+    authResult.value = `Ошибка: ${error}`;
+  } finally {
+    isLoading.value = false;
+  }
+}
 </script>
 
 <template>
 
     <body>
-        <NavBar />
+        <!-- <NavBar /> -->
 
         <main class="container">
             <div class="login-container">
                 <h2 class="login-title">Вход</h2>
-                <form>
+                <form @submit.prevent="authenticate">
                     <div class="form-group">
                         <label for="login" class="form-label">Логин:</label>
-                        <input type="text" id="login" class="form-input" placeholder="Введите логин">
+                        <input type="text" id="login" class="form-input" placeholder="Введите логин" v-model="login">
                     </div>
                     <div class="form-group">
                         <label for="password" class="form-label">Пароль:</label>
-                        <input type="password" id="password" class="form-input" placeholder="Введите пароль">
+                        <input type="password" id="password" class="form-input" placeholder="Введите пароль" v-model="password">
                     </div>
                     <button type="submit" class="login-button">Вход</button>
                 </form>
