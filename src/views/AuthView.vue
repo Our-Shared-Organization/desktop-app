@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import { invoke } from '@tauri-apps/api/core';
-import NavBar from '../components/NavBar.vue';
+import { invoke } from "@tauri-apps/api/core";
+import { ref } from "vue";
+import NavBar from "../components/NavBar.vue";
 
 const login = ref("");
 const password = ref("");
