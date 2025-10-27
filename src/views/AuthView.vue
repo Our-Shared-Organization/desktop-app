@@ -9,35 +9,35 @@ const authResult = ref("");
 const isLoading = ref(false);
 
 async function authenticate() {
-    if (!login.value || !password.value) {
-    authResult.value = "Please enter both login and password";
-    return;
-  }
-  
-  isLoading.value = true;
-  authResult.value = "";
-  
-  try {
-    const result = await invoke("authenticate", { 
-      login: login.value, 
-      password: password.value 
-    });
-    
-    if (result.userId !== null && result.userId !== undefined) {
-      authResult.value = `Успешный вход! UserID: ${result.userId}, RoleID: ${result.userRoleId}`;
+	if (!login.value || !password.value) {
+		authResult.value = "Please enter both login and password";
+		return;
+	}
 
-      localStorage.setItem('userId', String(result.userId));
-      localStorage.setItem('userRoleId', String(result.userRoleId));
+	isLoading.value = true;
+	authResult.value = "";
 
-      localStorage.setItem('userData', JSON.stringify(result));
-    } else if (result.message) {
-      authResult.value = `Ошибка входа: ${result.message}`;
-    }
-  } catch (error) {
-    authResult.value = `Ошибка: ${error}`;
-  } finally {
-    isLoading.value = false;
-  }
+	try {
+		const result = await invoke("authenticate", {
+			login: login.value,
+			password: password.value,
+		});
+
+		if (result.userId !== null && result.userId !== undefined) {
+			authResult.value = `Успешный вход! UserID: ${result.userId}, RoleID: ${result.userRoleId}`;
+
+			localStorage.setItem("userId", String(result.userId));
+			localStorage.setItem("userRoleId", String(result.userRoleId));
+
+			localStorage.setItem("userData", JSON.stringify(result));
+		} else if (result.message) {
+			authResult.value = `Ошибка входа: ${result.message}`;
+		}
+	} catch (error) {
+		authResult.value = `Ошибка: ${error}`;
+	} finally {
+		isLoading.value = false;
+	}
 }
 </script>
 
