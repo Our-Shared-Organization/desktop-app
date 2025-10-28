@@ -1,12 +1,10 @@
-<script setup lang="ts">
-import NavBar from '../components/NavBar.vue';
-
+<script setup>
+import TheWelcome from '../components/TheWelcome.vue'
 </script>
 
 <template>
-    <!-- <NavBar /> -->
+  <main>
+    какой-то пример
+    <TheWelcome />
+  </main>
 </template>
-
-<style scoped>
-
-</style>
