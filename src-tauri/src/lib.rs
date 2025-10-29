@@ -1,5 +1,6 @@
 use tauri::Manager;
 
+mod auth;
 mod classes;
 mod commands;
 
@@ -12,7 +13,17 @@ fn greet(name: &str) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let mut builder = tauri::Builder::default()
-        .plugin(tauri_plugin_stronghold::Builder::new(|pass| todo!()).build())
+        .plugin(
+            tauri_plugin_stronghold::Builder::new(|password| {
+                // Use a simple hash of a constant password for this example
+                // In production, you might want to derive this from user input
+                use sha2::{Digest, Sha256};
+                let mut hasher = Sha256::new();
+                hasher.update(password);
+                hasher.finalize().to_vec()
+            })
+            .build(),
+        )
         .plugin(tauri_plugin_http::init());
 
     #[cfg(desktop)]
@@ -34,7 +45,15 @@ pub fn run() {
         // .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, commands::authenticate])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            commands::authenticate,
+            auth::save_auth_token,
+            auth::get_auth_token,
+            auth::get_user_info,
+            auth::is_authenticated,
+            auth::logout
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

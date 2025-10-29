@@ -1,23 +1,26 @@
 <script setup>
-import { invoke } from "@tauri-apps/api/core";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuth } from "@/composables/useAuth";
+
+const router = useRouter();
+const { login: authLogin, isLoading } = useAuth();
 
 const login = ref("");
 const password = ref("");
-const authResult = ref("");
-const isLoading = ref(false);
+const errorMessage = ref("");
 
 const handleSubmit = async (event) => {
   event.preventDefault();
-  isLoading.value = true;
+  errorMessage.value = "";
 
-  try {
-    const response = await invoke("authenticate", { login: login.value, password: password.value });
-    authResult.value = response;
-  } catch (error) {
-    console.error("Authentication failed:", error);
-  } finally {
-    isLoading.value = false;
+  const result = await authLogin(login.value, password.value);
+  
+  if (result.success) {
+    // Redirect to main view after successful login
+    router.push({ name: 'main' });
+  } else {
+    errorMessage.value = result.error || "Ошибка входа. Проверьте данные.";
   }
 };
 </script>
@@ -27,16 +30,22 @@ const handleSubmit = async (event) => {
     <h1 class="login-title">Вход</h1>
 
     <form @submit="handleSubmit">
+      <div v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+      
       <div class="form-group">
         <label for="login">Логин:</label>
-        <input type="text" id="login" name="login" v-model="login" required>
+        <input type="text" id="login" name="login" v-model="login" required :disabled="isLoading">
       </div>
       <div class="form-group">
         <label for="password">Пароль:</label>
-        <input type="password" id="password" name="password" v-model="password" required>
+        <input type="password" id="password" name="password" v-model="password" required :disabled="isLoading">
       </div>
 
-      <button type="submit" class="login-button">Вход</button>
+      <button type="submit" class="login-button" :disabled="isLoading">
+        {{ isLoading ? 'Вход...' : 'Вход' }}
+      </button>
     </form>
   </div>
 </template>
@@ -98,5 +107,19 @@ input:focus {
 
 .login-button:hover {
   background-color: #464646;
+}
+
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
 }
 </style>
