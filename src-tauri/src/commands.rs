@@ -4,7 +4,6 @@ use crate::classes::request_error::RequestError;
 
 #[tauri::command]
 pub async fn authenticate(
-    app: tauri::AppHandle,
     login: String,
     password: String,
 ) -> Result<AuthResponse, String> {
