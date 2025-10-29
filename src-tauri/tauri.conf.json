@@ -52,7 +52,7 @@
       "tsp": false,
       "webviewInstallMode": {
         "silent": true,
-        "type": "embedBootstrapper"
+        "type": "downloadBootstrapper"
       },
       "wix": {
         "language": ["ru-RU", "en-US"]

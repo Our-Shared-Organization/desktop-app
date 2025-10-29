@@ -14,7 +14,6 @@
     "deep-link:default",
     "clipboard-manager:default",
     "positioner:default",
-    "window-state:default",
-    "stronghold:default"
+    "window-state:default"
   ]
 }

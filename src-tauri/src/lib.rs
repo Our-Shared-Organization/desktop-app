@@ -1,22 +1,9 @@
-use tauri::Manager;
-
 mod classes;
 mod commands;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let mut builder = tauri::Builder::default()
-        .plugin(
-            tauri_plugin_stronghold::Builder::new(|password| {
-                // Use a simple hash of a constant password for this example
-                // In production, you might want to derive this from user input
-                use sha2::{Digest, Sha256};
-                let mut hasher = Sha256::new();
-                hasher.update(password);
-                hasher.finalize().to_vec()
-            })
-            .build(),
-        )
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_http::init());
 
     #[cfg(desktop)]
