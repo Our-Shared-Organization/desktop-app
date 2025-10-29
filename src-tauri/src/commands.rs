@@ -1,12 +1,10 @@
-use crate::auth::{save_auth_token, StoredUserInfo};
 use crate::classes::auth_request::AuthRequest;
 use crate::classes::auth_response::AuthResponse;
 use crate::classes::request_error::RequestError;
-use tauri::AppHandle;
 
 #[tauri::command]
 pub async fn authenticate(
-    app: AppHandle,
+    app: tauri::AppHandle,
     login: String,
     password: String,
 ) -> Result<AuthResponse, String> {
@@ -37,18 +35,7 @@ pub async fn authenticate(
                 e, response_text
             )
         })?;
-        
-        // Store token and user info in Stronghold
-        let user_info = StoredUserInfo {
-            user_login: auth_result.user_login.clone(),
-            user_name: auth_result.user_name.clone(),
-            role: auth_result.role.clone(),
-        };
-        
-        save_auth_token(app, auth_result.token.clone(), user_info)
-            .await
-            .map_err(|e| format!("Failed to save credentials: {}", e))?;
-        
+
         Ok(auth_result)
     } else {
         if status == 400 || status == 404 {
