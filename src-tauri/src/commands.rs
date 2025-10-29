@@ -3,7 +3,10 @@ use crate::classes::auth_response::AuthResponse;
 use crate::classes::request_error::RequestError;
 
 #[tauri::command]
-pub async fn authenticate(login: String, password: String) -> Result<AuthResponse, String> {
+pub async fn authenticate(
+    login: String,
+    password: String,
+) -> Result<AuthResponse, String> {
     let client = reqwest::Client::new();
     let auth_data = AuthRequest {
         login: login.clone(),
@@ -11,7 +14,7 @@ pub async fn authenticate(login: String, password: String) -> Result<AuthRespons
     };
 
     let response = client
-        .post("https://localhost:32775/user/auth")
+        .post("http://localhost:32787/api/auth/login")
         .header("Content-Type", "application/json")
         .json(&auth_data)
         .send()
@@ -31,6 +34,7 @@ pub async fn authenticate(login: String, password: String) -> Result<AuthRespons
                 e, response_text
             )
         })?;
+
         Ok(auth_result)
     } else {
         if status == 400 || status == 404 {
