@@ -1,10 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import { invoke } from "@tauri-apps/api/core";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useAuth } from "@/composables/useAuth";
 
 const router = useRouter();
-const { login: authLogin, isLoading } = useAuth();
 
 const login = ref("");
 const password = ref("");
@@ -14,13 +13,17 @@ const handleSubmit = async (event) => {
   event.preventDefault();
   errorMessage.value = "";
 
-  const result = await authLogin(login.value, password.value);
-  
-  if (result.success) {
-    // Redirect to main view after successful login
-    router.push({ name: 'main' });
-  } else {
-    errorMessage.value = result.error || "Ошибка входа. Проверьте данные.";
+  try {
+    const result = await invoke("authenticate", {
+      login: login.value,
+      password: password.value,
+    });
+
+    if (result.token) {
+      router.push({ name: 'main' });
+    }
+  } catch (error) {
+    errorMessage.value = error || "Ошибка входа. Проверьте данные.";
   }
 };
 </script>
@@ -36,16 +39,14 @@ const handleSubmit = async (event) => {
       
       <div class="form-group">
         <label for="login">Логин:</label>
-        <input type="text" id="login" name="login" v-model="login" required :disabled="isLoading">
+        <input type="text" id="login" name="login" v-model="login" required>
       </div>
       <div class="form-group">
         <label for="password">Пароль:</label>
-        <input type="password" id="password" name="password" v-model="password" required :disabled="isLoading">
+        <input type="password" id="password" name="password" v-model="password" required>
       </div>
 
-      <button type="submit" class="login-button" :disabled="isLoading">
-        {{ isLoading ? 'Вход...' : 'Вход' }}
-      </button>
+      <button type="submit" class="login-button">Вход</button>
     </form>
   </div>
 </template>

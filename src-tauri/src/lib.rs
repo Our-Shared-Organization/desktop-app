@@ -1,19 +1,11 @@
 use tauri::Manager;
 
-mod auth;
 mod classes;
 mod commands;
-
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let mut builder = tauri::Builder::default()
-        .plugin(tauri_plugin_stronghold::Builder::new(|pass| todo!()).build())
         .plugin(
             tauri_plugin_stronghold::Builder::new(|password| {
                 // Use a simple hash of a constant password for this example
@@ -47,13 +39,7 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            greet,
             commands::authenticate,
-            auth::save_auth_token,
-            auth::get_auth_token,
-            auth::get_user_info,
-            auth::is_authenticated,
-            auth::logout
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
