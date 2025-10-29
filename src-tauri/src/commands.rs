@@ -37,18 +37,18 @@ pub async fn authenticate(
                 e, response_text
             )
         })?;
-        
+
         // Store token and user info in Stronghold
         let user_info = StoredUserInfo {
             user_login: auth_result.user_login.clone(),
             user_name: auth_result.user_name.clone(),
             role: auth_result.role.clone(),
         };
-        
+
         save_auth_token(app, auth_result.token.clone(), user_info)
             .await
             .map_err(|e| format!("Failed to save credentials: {}", e))?;
-        
+
         Ok(auth_result)
     } else {
         if status == 400 || status == 404 {

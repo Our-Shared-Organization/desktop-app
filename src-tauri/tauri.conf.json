@@ -7,7 +7,8 @@
     "beforeDevCommand": "bun run web:dev",
     "devUrl": "http://localhost:1420/sign-in",
     "beforeBuildCommand": "bun run web:build",
-    "frontendDist": "../dist"
+    "frontendDist": "../dist",
+    "removeUnusedCommands": true
   },
   "app": {
     "windows": [
@@ -51,7 +52,7 @@
       "tsp": false,
       "webviewInstallMode": {
         "silent": true,
-        "type": "offlineInstaller"
+        "type": "embedBootstrapper"
       },
       "wix": {
         "language": ["ru-RU", "en-US"]
