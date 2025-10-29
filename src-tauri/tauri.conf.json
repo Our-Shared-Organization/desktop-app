@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "identifier": "com.whatever.desktop",
   "build": {
-    "beforeDevCommand": "bun run dev",
-    "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "bun run build",
+    "beforeDevCommand": "bun run web:dev",
+    "devUrl": "http://localhost:1420/sign-in",
+    "beforeBuildCommand": "bun run web:build",
     "frontendDist": "../dist"
   },
   "app": {

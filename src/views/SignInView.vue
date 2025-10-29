@@ -12,7 +12,7 @@ const handleSubmit = async (event) => {
   isLoading.value = true;
 
   try {
-    const response = await invoke("auth", { login: login.value, password: password.value });
+    const response = await invoke("authenticate", { login: login.value, password: password.value });
     authResult.value = response;
   } catch (error) {
     console.error("Authentication failed:", error);

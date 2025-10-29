@@ -24,12 +24,12 @@ pub fn run() {
     }
 
     builder
-        .plugin(tauri_plugin_window_state::Builder::new().build())
-        .plugin(tauri_plugin_positioner::init())
+        // .plugin(tauri_plugin_window_state::Builder::new().build())
+        // .plugin(tauri_plugin_positioner::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_http::init())
-        .plugin(tauri_plugin_autostart::Builder::new().build())
+        // .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![greet, commands::authenticate])
