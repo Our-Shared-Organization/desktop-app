@@ -1,13 +1,17 @@
 {
   "name": "whatever-desktop",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "web:dev": "vite",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "web:build": "vite build",
+    "build": "tauri build",
+    "build:fast": "tauri build",
+    "tauri": "tauri",
+    "fmt": "cargo fmt --manifest-path ./src-tauri/Cargo.toml",
+    "clippy": "cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --all-features -- -D warnings"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.15",

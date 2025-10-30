@@ -1,13 +1,14 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "whatever-desktop",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "identifier": "com.whatever.desktop",
   "build": {
-    "beforeDevCommand": "bun run dev",
-    "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "bun run build",
-    "frontendDist": "../dist"
+    "beforeDevCommand": "bun run web:dev",
+    "devUrl": "http://localhost:1420/sign-in",
+    "beforeBuildCommand": "bun run web:build",
+    "frontendDist": "../dist",
+    "removeUnusedCommands": true
   },
   "app": {
     "windows": [
@@ -51,7 +52,7 @@
       "tsp": false,
       "webviewInstallMode": {
         "silent": true,
-        "type": "offlineInstaller"
+        "type": "downloadBootstrapper"
       },
       "wix": {
         "language": ["ru-RU", "en-US"]
