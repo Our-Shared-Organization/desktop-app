@@ -11,6 +11,7 @@
     "notification:default",
     "http:default",
     "deep-link:default",
-    "clipboard-manager:default"
+    "clipboard-manager:default",
+    "stronghold:default"
   ]
 }

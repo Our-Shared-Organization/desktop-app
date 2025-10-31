@@ -3,10 +3,7 @@ use crate::classes::auth_response::AuthResponse;
 use crate::classes::request_error::RequestError;
 
 #[tauri::command]
-pub async fn authenticate(
-    login: String,
-    password: String,
-) -> Result<AuthResponse, String> {
+pub async fn authenticate(login: String, password: String) -> Result<AuthResponse, String> {
     let client = reqwest::Client::new();
     let auth_data = AuthRequest {
         login: login.clone(),
