@@ -1,6 +1,6 @@
 <script setup>
 import { invoke } from "@tauri-apps/api/core";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();

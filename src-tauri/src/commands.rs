@@ -1,6 +1,7 @@
 use crate::classes::auth_request::AuthRequest;
 use crate::classes::auth_response::AuthResponse;
 use crate::classes::request_error::RequestError;
+use tauri::Manager;
 
 #[tauri::command]
 pub async fn authenticate(login: String, password: String) -> Result<AuthResponse, String> {
@@ -11,7 +12,7 @@ pub async fn authenticate(login: String, password: String) -> Result<AuthRespons
     };
 
     let response = client
-        .post("http://localhost:32787/api/auth/login")
+        .post("http://localhost:32769/api/auth/login")
         .header("Content-Type", "application/json")
         .json(&auth_data)
         .send()
