@@ -1,6 +1,6 @@
 [package]
 name = "whatever-desktop"
-version = "0.2.0"
+version = "0.3.0"
 description = "Desktop app for managers"
 authors = ["you"]
 edition = "2021"
@@ -28,6 +28,8 @@ tauri-plugin-deep-link = "2"
 tauri-plugin-clipboard-manager = "2"
 reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
 sha2 = "0.10"
+fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
+tauri-plugin-stronghold = "2"
 
 [profile.release]
 codegen-units = 1

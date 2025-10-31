@@ -1,17 +1,50 @@
 <script setup>
 import { invoke } from "@tauri-apps/api/core";
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { storeToken, loadToken } from "@/lib/stronghold";
+import { isTokenValid } from "@/lib/jwt";
 
 const router = useRouter();
+const route = useRoute();
 
 const login = ref("");
 const password = ref("");
 const errorMessage = ref("");
+const statusMessages = ref([]);
+const isSubmitting = ref(false);
+const isCheckingToken = ref(true);
+
+const pushStatus = (message) => {
+  statusMessages.value = [...statusMessages.value, message];
+};
+
+// Check for valid token on mount
+onMounted(async () => {
+  try {
+    const token = await loadToken();
+    
+    if (token && isTokenValid(token)) {
+      pushStatus("Valid token found. Logging in automatically...");
+      
+      // Redirect to the intended page or main page
+      const redirectPath = route.query.redirect || '/';
+      router.push(redirectPath);
+    }
+  } catch (error) {
+    console.error("Error checking stored token:", error);
+  } finally {
+    isCheckingToken.value = false;
+  }
+});
 
 const handleSubmit = async (event) => {
   event.preventDefault();
   errorMessage.value = "";
+  statusMessages.value = [];
+  isSubmitting.value = true;
+
+  pushStatus("Connecting to API...");
 
   try {
     const result = await invoke("authenticate", {
@@ -20,10 +53,27 @@ const handleSubmit = async (event) => {
     });
 
     if (result.token) {
-      router.push({ name: 'main' });
+      pushStatus("Encrypting credentials...");
+      try {
+        await storeToken(result.token);
+        pushStatus("Token stored securely.");
+      } catch (storeError) {
+        console.error("Failed to persist auth token", storeError);
+        pushStatus("Encryption failed. Token not stored.");
+      }
+      
+      // Redirect to the intended page or main page
+      const redirectPath = route.query.redirect || '/';
+      router.push(redirectPath);
+    } else {
+      pushStatus("Authentication succeeded but no token returned.");
+      errorMessage.value = "Не удалось получить токен авторизации.";
     }
   } catch (error) {
+    pushStatus("API request failed.");
     errorMessage.value = error || "Ошибка входа. Проверьте данные.";
+  } finally {
+    isSubmitting.value = false;
   }
 };
 </script>
@@ -32,10 +82,20 @@ const handleSubmit = async (event) => {
   <div class="login-container">
     <h1 class="login-title">Вход</h1>
 
-    <form @submit="handleSubmit">
+    <div v-if="isCheckingToken" class="checking-message">
+      Проверка сохраненных учетных данных...
+    </div>
+
+    <form v-else @submit="handleSubmit">
       <div v-if="errorMessage" class="error-message">
         {{ errorMessage }}
       </div>
+
+      <ul v-if="statusMessages.length" class="status-list">
+        <li v-for="status in statusMessages" :key="status">
+          {{ status }}
+        </li>
+      </ul>
       
       <div class="form-group">
         <label for="login">Логин:</label>
@@ -46,7 +106,9 @@ const handleSubmit = async (event) => {
         <input type="password" id="password" name="password" v-model="password" required>
       </div>
 
-      <button type="submit" class="login-button">Вход</button>
+      <button type="submit" class="login-button" :disabled="isSubmitting">
+        {{ isSubmitting ? "Подождите..." : "Вход" }}
+      </button>
     </form>
   </div>
 </template>
@@ -122,5 +184,32 @@ input:focus {
   border-radius: 4px;
   margin-bottom: 20px;
   font-size: 14px;
+}
+
+.status-list {
+  background-color: rgba(255, 255, 255, 0.7);
+  color: #464646;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  list-style: none;
+}
+
+.status-list li {
+  margin-bottom: 4px;
+}
+
+.status-list li:last-child {
+  margin-bottom: 0;
+}
+
+.checking-message {
+  background-color: rgba(107, 107, 107, 0.1);
+  color: #6B6B6B;
+  padding: 20px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 16px;
 }
 </style>
