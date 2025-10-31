@@ -27,6 +27,9 @@ onMounted(async () => {
     if (token && isTokenValid(token)) {
       pushStatus("Valid token found. Logging in automatically...");
       
+      // Add delay so user can see the status
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
       // Redirect to the intended page or main page
       const redirectPath = route.query.redirect || '/';
       router.push(redirectPath);
@@ -61,6 +64,11 @@ const handleSubmit = async (event) => {
         console.error("Не удалось сохранить токен авторизации", storeError);
         pushStatus("Не удалось сохранить токен. Шифрование не выполнено.");
       }
+      
+      pushStatus("Вход выполнен успешно! Переход...");
+      
+      // Add delay so user can see the success status
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Redirect to the intended page or main page
       const redirectPath = route.query.redirect || '/';

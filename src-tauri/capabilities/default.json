@@ -13,9 +13,6 @@
     "http:default",
     "deep-link:default",
     "clipboard-manager:default",
-    "stronghold:allow-initialize",
-    "stronghold:allow-save-secret",
-    "stronghold:allow-get-store-record",
-    "stronghold:allow-remove-secret"
+    "stronghold:default"
   ]
 }
