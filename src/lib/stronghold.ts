@@ -11,9 +11,6 @@ export const initStronghold = async () => {
   const vaultPath = await join(await appDataDir(), VAULT_FILENAME);
   const keyPath = await join(await appDataDir(), 'vault.key');
   
-  console.log('Vault path:', vaultPath);
-  console.log('Key path:', keyPath);
-  
   // Use key file instead of password for much faster initialization
   const stronghold = await Stronghold.load(vaultPath, keyPath);
   
