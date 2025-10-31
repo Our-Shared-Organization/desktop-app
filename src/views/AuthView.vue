@@ -10,7 +10,7 @@ const isLoading = ref(false);
 
 async function authenticate() {
 	if (!login.value || !password.value) {
-		authResult.value = "Please enter both login and password";
+		authResult.value = "Пожалуйста, введите логин и пароль.";
 		return;
 	}
 
@@ -44,7 +44,7 @@ async function authenticate() {
 <template>
 
     <body>
-        <!-- <NavBar /> -->
+        <NavBar />
 
         <main class="container">
             <div class="login-container">

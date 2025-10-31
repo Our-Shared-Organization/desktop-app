@@ -8,31 +8,22 @@ const TOKEN_STORE_KEY = 'auth_token';
 let strongholdInitPromise: Promise<{ stronghold: Stronghold; client: Client }> | null = null;
 
 export const initStronghold = async () => {
-  console.time('Stronghold Init Total');
-  
-  console.time('Get paths');
   const vaultPath = await join(await appDataDir(), VAULT_FILENAME);
   const keyPath = await join(await appDataDir(), 'vault.key');
-  console.timeEnd('Get paths');
   
   console.log('Vault path:', vaultPath);
   console.log('Key path:', keyPath);
   
   // Use key file instead of password for much faster initialization
-  console.time('Stronghold.load');
   const stronghold = await Stronghold.load(vaultPath, keyPath);
-  console.timeEnd('Stronghold.load');
   
   let client: Client;
-  console.time('Client load/create');
   try {
     client = await stronghold.loadClient(DEFAULT_CLIENT);
   } catch {
     client = await stronghold.createClient(DEFAULT_CLIENT);
   }
-  console.timeEnd('Client load/create');
   
-  console.timeEnd('Stronghold Init Total');
   return { stronghold, client };
 };
 

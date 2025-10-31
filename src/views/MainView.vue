@@ -1,4 +1,20 @@
 <script setup>
+import { useRouter } from 'vue-router';
+import { clearToken } from '@/lib/stronghold';
+
+const router = useRouter();
+
+// Функция выхода из системы
+async function handleLogout() {
+  try {
+    await clearToken();
+    router.push({ name: 'signin' });
+  } catch (error) {
+    console.error('Error during logout:', error);
+    alert('Ошибка при выходе из системы');
+  }
+}
+
 // Общее модальное окно
 function openModal(client, service, date, status) {
   const modal = document.getElementById('clientModal');
@@ -79,7 +95,7 @@ window.onclick = function (event) {
       <button class="nav-btn">Редактировать</button>
       <button class="nav-btn">Добавить</button>
       <button class="nav-btn" onclick="openDelModal()">Удалить</button>
-      <button class="nav-btn">Выход</button>
+      <button class="nav-btn" @click="handleLogout">Выход</button>
     </div>
 
     <table>
