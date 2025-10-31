@@ -1,15 +1,32 @@
+<script setup>
+import { useRouter } from "vue-router";
+import { clearToken } from '@/lib/stronghold';
+
+const router = useRouter();
+
+const handleLogout = async () => {
+    try {
+        await clearToken();
+        router.push({ name: 'signin' });
+    } catch (error) {
+        console.error("Error during logout:", error);
+    }
+};
+</script>
+
 <template>
     <nav class="navbar">
         <div class="container">
             <div class="nav-content">
                 <div class="nav-links-left">
-                    <RouterLink to="/" class="nav-link">Главная</RouterLink>
-                    <RouterLink to="/masters" class="nav-link">Мастера</RouterLink>
+                    <RouterLink to="/" class="nav-link">Home</RouterLink>
+                    <RouterLink to="/masters" class="nav-link">Masters</RouterLink>
                 </div>
                 <RouterLink to="/" class="logo">Ω</RouterLink>
                 <div class="nav-links-right">
-                    <RouterLink to="/services" class="nav-link">Услуги</RouterLink>
-                    <RouterLink to="/contacts" class="nav-link">Контакты</RouterLink>
+                    <RouterLink to="/services" class="nav-link">Services</RouterLink>
+                    <RouterLink to="/contacts" class="nav-link">Contacts</RouterLink>
+                    <a href="#" @click.prevent="handleLogout" class="nav-link logout-link">Logout</a>
                 </div>
             </div>
         </div>
@@ -26,6 +43,15 @@
     backdrop-filter: blur(10px);
     border-bottom: 1px solid #2d2d2d;
     z-index: 1000;
+}
+
+.logout-link {
+    color: #ff4444;
+    cursor: pointer;
+}
+
+.logout-link:hover {
+    color: #ff6666;
 }
 
 .nav-content {

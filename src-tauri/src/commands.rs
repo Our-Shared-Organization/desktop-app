@@ -1,7 +1,6 @@
 use crate::classes::auth_request::AuthRequest;
 use crate::classes::auth_response::AuthResponse;
 use crate::classes::request_error::RequestError;
-use tauri::Manager;
 
 #[tauri::command]
 pub async fn authenticate(login: String, password: String) -> Result<AuthResponse, String> {
@@ -17,18 +16,18 @@ pub async fn authenticate(login: String, password: String) -> Result<AuthRespons
         .json(&auth_data)
         .send()
         .await
-        .map_err(|e| format!("Ошибка отправки запроса: {}", e))?;
+        .map_err(|e| format!("Error sending request: {}", e))?;
 
     let status = response.status();
     let response_text = response
         .text()
         .await
-        .map_err(|e| format!("Ошибка чтения ответа: {}", e))?;
+        .map_err(|e| format!("Error reading response: {}", e))?;
 
     if status.is_success() {
         let auth_result: AuthResponse = serde_json::from_str(&response_text).map_err(|e| {
             format!(
-                "Ошибка парсинга JSON ответа: {} - Response: {}",
+                "Error parsing JSON response: {} - Response: {}",
                 e, response_text
             )
         })?;
@@ -41,6 +40,6 @@ pub async fn authenticate(login: String, password: String) -> Result<AuthRespons
             }
         }
 
-        Err(format!("Ошибка входа ({}): {}", status, response_text))
+        Err(format!("Login error ({}): {}", status, response_text))
     }
 }
