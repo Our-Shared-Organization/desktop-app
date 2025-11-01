@@ -26,9 +26,6 @@ async function authenticate() {
 		if (result.userId !== null && result.userId !== undefined) {
 			authResult.value = `Успешный вход! UserID: ${result.userId}, RoleID: ${result.userRoleId}`;
 
-			localStorage.setItem("userId", String(result.userId));
-			localStorage.setItem("userRoleId", String(result.userRoleId));
-
 			localStorage.setItem("userData", JSON.stringify(result));
 		} else if (result.message) {
 			authResult.value = `Ошибка входа: ${result.message}`;

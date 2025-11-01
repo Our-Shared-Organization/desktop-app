@@ -5,7 +5,7 @@
   "identifier": "com.whatever.desktop",
   "build": {
     "beforeDevCommand": "bun run web:dev",
-    "devUrl": "http://localhost:1420/sign-in",
+    "devUrl": "http://localhost:1420/signin",
     "beforeBuildCommand": "bun run web:build",
     "frontendDist": "../dist",
     "removeUnusedCommands": true

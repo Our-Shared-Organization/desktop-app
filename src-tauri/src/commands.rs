@@ -11,7 +11,7 @@ pub async fn authenticate(login: String, password: String) -> Result<AuthRespons
     };
 
     let response = client
-        .post("http://localhost:32769/api/auth/login")
+        .post("http://localhost:32768/api/auth/login")
         .header("Content-Type", "application/json")
         .json(&auth_data)
         .send()

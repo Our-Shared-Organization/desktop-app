@@ -13,6 +13,7 @@
     "http:default",
     "deep-link:default",
     "clipboard-manager:default",
-    "stronghold:default"
+    "stronghold:default",
+    "stronghold:allow-remove-store-record"
   ]
 }
