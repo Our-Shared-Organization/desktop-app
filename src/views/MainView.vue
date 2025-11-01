@@ -6,13 +6,13 @@ const router = useRouter();
 
 // Функция выхода из системы
 async function handleLogout() {
-  try {
-    await clearToken();
-    router.push({ name: 'signin' });
-  } catch (error) {
-    console.error('Error during logout:', error);
-    alert('Ошибка при выходе из системы');
-  }
+	try {
+		await clearToken();
+		router.push({ name: "signin" });
+	} catch (error) {
+		console.error("Error during logout:", error);
+		alert("Ошибка при выходе из системы");
+	}
 }
 
 // Общее модальное окно
