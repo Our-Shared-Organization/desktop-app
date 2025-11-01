@@ -1,6 +1,6 @@
 <script setup>
-import { useRouter } from 'vue-router';
-import { clearToken } from '@/lib/stronghold';
+import { useRouter } from "vue-router";
+import { clearToken } from "@/lib/stronghold";
 
 const router = useRouter();
 
