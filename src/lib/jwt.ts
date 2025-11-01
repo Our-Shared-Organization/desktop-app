@@ -19,7 +19,7 @@ export const isTokenExpired = (token: string): boolean => {
   const payload = decodeJWT(token);
   
   if (!payload || !payload.exp) {
-    // If we can't decode or there's no expiration, consider it expired
+    // expired token
     return true;
   }
   

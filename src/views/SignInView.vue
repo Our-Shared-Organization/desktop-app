@@ -27,12 +27,15 @@ onMounted(async () => {
     if (token && isTokenValid(token)) {
       pushStatus("Valid token found. Logging in automatically...");
       
+      // Add delay so user can see the status
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
       // Redirect to the intended page or main page
       const redirectPath = route.query.redirect || '/';
       router.push(redirectPath);
     }
   } catch (error) {
-    console.error("Error checking stored token:", error);
+    console.error("Ошибка проверки токена:", error);
   } finally {
     isCheckingToken.value = false;
   }
@@ -44,7 +47,7 @@ const handleSubmit = async (event) => {
   statusMessages.value = [];
   isSubmitting.value = true;
 
-  pushStatus("Connecting to API...");
+  pushStatus("Подключение к API...");
 
   try {
     const result = await invoke("authenticate", {
@@ -53,14 +56,19 @@ const handleSubmit = async (event) => {
     });
 
     if (result.token) {
-      pushStatus("Encrypting credentials...");
+      pushStatus("Шифрование учетных данных...");
       try {
         await storeToken(result.token);
-        pushStatus("Token stored securely.");
+        pushStatus("Токен успешно сохранен.");
       } catch (storeError) {
-        console.error("Failed to persist auth token", storeError);
-        pushStatus("Encryption failed. Token not stored.");
+        console.error("Не удалось сохранить токен авторизации", storeError);
+        pushStatus("Не удалось сохранить токен. Шифрование не выполнено.");
       }
+      
+      pushStatus("Вход выполнен успешно! Переход...");
+      
+      // Add delay so user can see the success status
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Redirect to the intended page or main page
       const redirectPath = route.query.redirect || '/';

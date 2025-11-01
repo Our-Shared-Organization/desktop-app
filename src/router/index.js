@@ -16,7 +16,7 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/sign-in',
+      path: '/signin',
       name: 'signin',
       component: SignInView,
     },

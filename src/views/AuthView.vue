@@ -10,7 +10,7 @@ const isLoading = ref(false);
 
 async function authenticate() {
 	if (!login.value || !password.value) {
-		authResult.value = "Please enter both login and password";
+		authResult.value = "Пожалуйста, введите логин и пароль.";
 		return;
 	}
 
@@ -25,9 +25,6 @@ async function authenticate() {
 
 		if (result.userId !== null && result.userId !== undefined) {
 			authResult.value = `Успешный вход! UserID: ${result.userId}, RoleID: ${result.userRoleId}`;
-
-			localStorage.setItem("userId", String(result.userId));
-			localStorage.setItem("userRoleId", String(result.userRoleId));
 
 			localStorage.setItem("userData", JSON.stringify(result));
 		} else if (result.message) {
@@ -44,7 +41,7 @@ async function authenticate() {
 <template>
 
     <body>
-        <!-- <NavBar /> -->
+        <NavBar />
 
         <main class="container">
             <div class="login-container">

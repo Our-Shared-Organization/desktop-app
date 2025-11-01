@@ -15,6 +15,7 @@
     "clipboard-manager:default",
     "positioner:default",
     "window-state:default",
-    "stronghold:default"
+    "stronghold:default",
+    "stronghold:allow-remove-store-record"
   ]
 }
